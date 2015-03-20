@@ -1,0 +1,2 @@
+# fuzzydb
+FuzzyDB for Tira
