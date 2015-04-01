@@ -2,6 +2,7 @@ package manipulators
 
 class NgramSplitter(plainstr: String)  {
 	val str = plainstr;
+	var grams = List[String]();
 	/*
 	* Splits string to ngrams
 	*/
@@ -13,8 +14,8 @@ class NgramSplitter(plainstr: String)  {
 			else s
 		}
 	}
-	def ngrams():List[String] = {
-		var grams = List[String]();
+	// Generates ngrams
+	def generate_ngrams():List[String] = {
 		var s = "";
 		for( i <- 1 to str.length+2) {
 			s = ""
@@ -22,5 +23,15 @@ class NgramSplitter(plainstr: String)  {
 			grams = grams ::: List(s);
 		}
 		grams
+	}
+	// Returns all ngrams as a List
+	def ngrams():List[String] = {
+		grams
+	}
+	// Return search range with treshold a
+	// min: a^2 * |X|
+	// max: |X| / a^2
+	def search_range(a:Double):(Int, Int) = {
+		((a*a*grams.length).toInt, (grams.length/(a*a)).toInt) 
 	}
 }
