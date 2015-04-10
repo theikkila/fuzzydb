@@ -31,7 +31,7 @@ class NgramSpec extends FunSpec with Matchers {
 			ri.getWeights() should be (Array[Int](115,3,266,46,23,123,513))
 		}
 		it("should sort ngrams in order of given weights") {
-			val ri = new Ngram("kissa")
+			val ri = new Ngram("kissa")	
 			ri.setWeights(Array[Int](115,3,266,46,23,123,513))
 			ri.ngrams() should be (List[String]("$$k", "$ki", "kis", "iss", "ssa", "sa$", "a$$"))
 			ri.ngrams_ordered() should be (List[String]("$ki", "ssa","iss","$$k","sa$","kis","a$$" ))

@@ -22,7 +22,7 @@ class Ngram(ngrams: List[String], plainstr: String)  {
 	def ngrams():List[String] = { grams }
 
 	def ngrams_ordered():List[String] = {
-		val h = new MinHeap();
+		val h = new Heap();
 		var i = 0
 		grams.foreach((ng: String) => {
 			val k = new SWPair(ng, weights(i))
@@ -31,7 +31,7 @@ class Ngram(ngrams: List[String], plainstr: String)  {
 			});
 		var ordered_grams = List[String]()
 		for(k <- 1 to h.length()) {
-			h.delmin() match {
+			h.del() match {
 				case Some(swp: SWPair) => { ordered_grams = ordered_grams ::: List[String](swp.string)}
 				case _ => throw new ClassCastException
 			}

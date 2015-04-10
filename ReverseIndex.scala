@@ -2,28 +2,51 @@ package dstructures
 /*
 * Implementation of HashMap (ReverseIndex)
 */
+
+trait KeyStore {
+  def key: String
+}
+
+
 class ReverseIndex(buckets_count: Int = 100)  {
-	var buckets = new Array[List[FeatureMap]](buckets_count);
-	buckets = buckets.map(idx => { List[FeatureMap]()})
+	var buckets = new Array[List[KeyStore]](buckets_count);
+	buckets = buckets.map(idx => { List[KeyStore]()})
 
 	// Get bucket index by key
 	def bid(key: String): Int = { math.abs(key.hashCode() % buckets_count) }
 	/*
 	* Set K-V pair
 	*/
-	def set(fmap: FeatureMap) = {
-		val key = fmap.getKey();
+	def set(kv: KeyStore) = {
+		val key = kv.key;
 		var b = bucket(key);
 		val bd = bid(key);
-		buckets(bd) = b.filter(fm => {fm.getKey() != key})
-		buckets(bd) = buckets(bd) ::: List(fmap)
+		buckets(bd) = b.filter(fm => {fm.key != key})
+		buckets(bd) = buckets(bd) ::: List(kv)
 	}
-	// Get featuremap by key
-	def get(key: String):Option[FeatureMap] = {
+	// Get kv by key
+	def get(key: String):Option[KeyStore] = {
 		for(slot <- bucket(key)) {
-			if(slot.getKey() == key) return Some(slot)
+			if(slot.key == key) return Some(slot)
 		}
 		None
+	}
+
+	// Get bucket by key
+	def bucket(key: String): List[KeyStore] = { buckets(bid(key)) }
+	def getBuckets(): List[List[KeyStore]] = buckets.toList
+	def bucketCount(): Integer = { buckets_count }
+}
+
+
+
+class ReverseFeatureIndex(buckets_count: Int = 100) extends ReverseIndex (buckets_count) {
+
+	def getLength(key: String): Int = {
+		get(key) match {
+			case Some(fmap: FeatureMap) => fmap.length()
+			case _ => 0
+		}
 	}
 
 	// Add string into featuremap @ key
@@ -46,8 +69,53 @@ class ReverseIndex(buckets_count: Int = 100)  {
 		}
 	}
 
-	// Get bucket by key
-	def bucket(key: String): List[FeatureMap] = { buckets(bid(key)) }
+	// Get strings from featuremap @ key
+	def getStringsOfLength(key: String, le: Int): List[String] = {
+		get(key) match {
+			case Some(fmap: FeatureMap) => fmap.getStringsOfLength(le)
+			case _ => List[String]()
+		}
+	}
 
-	def bucketCount(): Integer = { buckets_count }
+}
+
+
+class ReverseKeyCountIndex(buckets_count: Int = 100) extends ReverseIndex (buckets_count) {
+
+	// Add count
+	def ++(key:String) = {
+		get(key) match {
+			case Some(cmap: CountMap) => cmap ++
+			case _ => {
+				val n = new CountMap(key)
+				n ++;
+				set(n)
+			}
+		}
+	}
+
+	// Get strings from featuremap @ key
+	def count(key: String): Int = {
+		get(key) match {
+			case Some(cmap: CountMap) => cmap.count
+			case _ => 0
+		}
+	}
+	def ordered_keys(): List[CountMap] = {
+		val h = new Heap()
+		var li = getBuckets().flatten match {
+			case k: List[CountMap] => k
+			case _ => throw new ClassCastException
+		}
+		li.foreach(h.insert(_));
+		var ld = List[CountMap]();
+		for (l <- 1 to h.length()) {
+			h.del() match {
+				case Some(cm: CountMap) => ld = ld ::: List(cm);
+				case _ => None
+			}
+		}
+		ld
+	}
+
 }

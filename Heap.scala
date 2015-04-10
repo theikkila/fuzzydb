@@ -5,7 +5,12 @@ package dstructures
 */
 
 trait Heapable {
-  def value(): Int
+  def value: Int
+  def diff(b: Heapable): Int = value - b.value
+}
+
+trait MaxHeapable extends Heapable{
+  override def diff(b: Heapable): Int = b.value - value
 }
 
 /*
@@ -13,30 +18,29 @@ trait Heapable {
 * http://en.wikipedia.org/wiki/Heap_(data_structure)
 */
 
-class MinHeap(size: Int = 100) {
+class Heap(size: Int = 100) {
 	var heapsize = -1;
 	var len = size;
 	var A = new Array[Heapable](size);
 
-	def findmin():Option[Heapable] = {
+	def find():Option[Heapable] = {
 		A(0) match {
 			case first:Heapable => Some(first)
 			case _ => None
 		}
 		
 	}
-	def delmin():Option[Heapable] = {
-		val min = findmin()
+	def del():Option[Heapable] = {
+		val m = find()
 		A(0) = A(heapsize)
-		minheapify(0)
-		min
+		heapify(0)
+		m
 	}
 	def insert(item: Heapable) = {
-
 		if (heapsize == len) throw new IllegalStateException("Heap buffer overflow")
 		var i = heapsize+1
 		heapsize = i
-		while (i > 0 && A(parent(i)).value() > item.value()) {
+		while (i > 0 && A(parent(i)).diff(item) > 0) {
 			A(i) = A(parent(i))
 			i = parent(i)
 		}
@@ -65,18 +69,18 @@ class MinHeap(size: Int = 100) {
 		A(j) = iv
 	}
 
-	// min-heapify
-	def minheapify(i: Int): Unit = {
+	// heapify
+	def heapify(i: Int): Unit = {
 		val l = left(i)
 		val r = right(i)
 		var smallest = i
-		if (l < heapsize && A(l).value() < A(i).value()) smallest = l
+		if (l < heapsize && A(l).diff(A(i)) < 0) smallest = l
 		else smallest = i
 
-		if (r < heapsize && A(r).value() < A(smallest).value()) smallest = r
+		if (r < heapsize && A(r).diff(A(smallest)) < 0) smallest = r
 		if (smallest != i) {
 			swap(i, smallest)
-			minheapify(smallest)
+			heapify(smallest)
 		}
 	}
 }

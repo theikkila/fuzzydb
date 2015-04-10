@@ -17,23 +17,18 @@ object Runner {
 
 
 	def main(args: Array[String]) {
-		/*
+		val V = new ReverseFeatureIndex();
 		println("Loading database")
 		val source = io.Source.fromFile(args(0))
-		//val streamPickle = BinaryPickle(new FileInputStream(args(0)+".db"))
-		//ngrams = streamPickle.unpickle[collection.mutable.Map[String, List[String]]]
 		val lines =  source.getLines
 		var counter = 0;
 		for( line <- lines) {
-			words += (line->line)
 			counter += 1;
-			if (counter % 1000 == 0) println(counter)
+			//if (counter % 1000 == 0) println(counter)
 			val a = new NgramSplitter(line);
-			for( ngram <- a.ngrams()) {
-				ngrams.get(ngram) match {
-					case Some(list) => ngrams += (ngram -> (list ::: List(line)))
-					case None => ngrams += (ngram -> List(line))
-				}
+			for( ngram <- a.generate_ngrams()) {
+				//println(ngram);
+				V.addString(ngram, line);
 			}
 			
 		}
@@ -42,17 +37,43 @@ object Runner {
 		out.write(ngrams.pickle.value)
 		out.close
 		*/
-		println("Database loaded, contains "+words.size+" entities")
+		println("Database loaded, contains "+counter+" entities")
+		
 		for (ln <- io.Source.stdin.getLines) {
-			time {fuzzysearch(ln)}
-			time {simstring(ln)}
+			print("?: ");
+			AllScan(new Ngram(ln), 3, V, 10)
+			//time {fuzzysearch(ln)}
+			//time {simstring(ln)}
 			
 		}
+		
+
+	}
+	def AllScan(X: Ngram, r: Int, V:ReverseFeatureIndex, l: Int): List[String] = {
+		val M = new ReverseKeyCountIndex();
+		val allStrings = X.ngrams().map(q => V.getStrings(q)).flatten.foreach(M ++ _);
+		/*
+		for(gram <- X.ngrams()) {
+			println(gram)
+			for(str <- V.getStrings(gram)) {
+				println(str)
+			}
+		}
 		*/
-		println("Hell Wolr!");
-		val ri = new ReverseIndex(10)
-		ri.set(new FeatureMap("aab"))
-		ri.get("kissa");
+		List[String]("kissa");
+	}
+
+
+	def CPMerge(X: Ngram, r: Int, V:ReverseFeatureIndex, l: Int): List[String] = {
+		val weights : Array[Int] = X.ngrams().map(x => {
+			V.getLength(x)
+			}).toArray
+
+		X.setWeights(weights);
+		val query = X.ngrams_ordered();
+		query.foreach(println)
+
+		List[String]("kissa");
 	}
 
 	/*
