@@ -57,7 +57,7 @@ class MinMaxHeapSpec extends FunSpec with Matchers {
 
 		it("should have working find-min") {
 			val ri = new Heap()
-			val a = new HeapObjMin(2, "eka")
+			val a = new HeapObjMin(1, "eka")
 			val c = new HeapObjMin(8, "kasi")
 			val d = new HeapObjMin(2, "toka")
 			ri.insert(new HeapObjMin(3, "test"))
@@ -128,6 +128,15 @@ class MinMaxHeapSpec extends FunSpec with Matchers {
 		it("should have working merge") {
 			val ri = new Heap()
 
+		}
+		it("should have resize") {
+			val ri = new Heap(8)
+			for(i <- 0 to 1000) {
+				ri.insert(new HeapObjMax(i, "resize"))
+			}
+			for(i <- 1000 to 0) {
+				ri.del() should be (Some(new HeapObjMax(i, "resize")))
+			}
 		}
 		
 	}

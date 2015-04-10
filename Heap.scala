@@ -1,56 +1,60 @@
 package dstructures
 
 /*
-* Heapable trait
+* Heapable traits
 */
 
 trait Heapable {
-  def value: Int
-  def diff(b: Heapable): Int = value - b.value
+	def value: Int
+	def diff(b: Heapable): Int = value - b.value
 }
 
 trait MaxHeapable extends Heapable{
-  override def diff(b: Heapable): Int = b.value - value
+	override def diff(b: Heapable): Int = b.value - value
 }
 
 /*
-* Implements Binary MinHeap
+* Implements Binary Heap (Min or Max from traits)
 * http://en.wikipedia.org/wiki/Heap_(data_structure)
 */
 
 class Heap(size: Int = 100) {
-	var heapsize = -1;
+	var heapsize = 0;
 	var len = size;
 	var A = new Array[Heapable](size);
 
 	def find():Option[Heapable] = {
+		if(heapsize <= 0) return None		
 		A(0) match {
 			case first:Heapable => Some(first)
 			case _ => None
 		}
-		
 	}
 	def del():Option[Heapable] = {
 		val m = find()
+		heapsize -= 1;
+		if(heapsize < 0) return None
 		A(0) = A(heapsize)
-		heapify(0)
+		if(heapsize > 0){
+			heapify(0)
+		}
 		m
 	}
 	def insert(item: Heapable) = {
-		if (heapsize == len) throw new IllegalStateException("Heap buffer overflow")
-		var i = heapsize+1
-		heapsize = i
-		while (i > 0 && A(parent(i)).diff(item) > 0) {
-			A(i) = A(parent(i))
-			i = parent(i)
-		}
-		A(i) = item
-
-		
+		heapsize += 1;
+		if (heapsize >= len) resize()
+		A(heapsize-1) = item
+		decreaseKey(heapsize-1)
 	}
-	def decreaseKey() = None
+	def decreaseKey(i: Int) = {
+		var index = i;
+		while (index > 0 && A(parent(index)).diff(A(index)) >= 0) {
+			swap(index, parent(index))
+			index = parent(index)
+		}
+	}
 	def merge() = None
-	def length():Int = heapsize + 1
+	def length():Int = heapsize
 
 	// Return left child
 	def left(i: Int): Int = (2 * i)
@@ -82,5 +86,10 @@ class Heap(size: Int = 100) {
 			swap(i, smallest)
 			heapify(smallest)
 		}
+	}
+
+	def resize(): Unit = {
+		A = A ++ new Array[Heapable](len);
+		len = len*2
 	}
 }

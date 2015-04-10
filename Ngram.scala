@@ -30,10 +30,10 @@ class Ngram(ngrams: List[String], plainstr: String)  {
 			i = i + 1;
 			});
 		var ordered_grams = List[String]()
-		for(k <- 1 to h.length()) {
+		for(k <- 0 to h.length()) {
 			h.del() match {
 				case Some(swp: SWPair) => { ordered_grams = ordered_grams ::: List[String](swp.string)}
-				case _ => throw new ClassCastException
+				case _ => None
 			}
 		}
 		ordered_grams

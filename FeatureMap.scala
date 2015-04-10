@@ -32,10 +32,11 @@ class CountMap(k:String, c:Int = 0) extends KeyStore with MaxHeapable {
 		count += 1;
 	}
 	def canEqual(a: Any) = a.isInstanceOf[CountMap]
-	override def toString(): String =  key
-	override def equals(b: Any): Boolean =
-		b match {
-			case b: CountMap => b.canEqual(this) && key == b.key && count == b.count
+	override def equals(a: Any) = 
+		a match {
+			case a: CountMap => a.key == key && a.count == count;
 			case _ => false
 		}
+	
+	override def toString(): String =  key+":"+count
 }

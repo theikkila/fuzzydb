@@ -41,7 +41,7 @@ object Runner {
 		
 		for (ln <- io.Source.stdin.getLines) {
 			print("?: ");
-			AllScan(new Ngram(ln), 3, V, 10)
+			AllScan(new Ngram(ln), 3, V, 10).foreach(println(_))
 			//time {fuzzysearch(ln)}
 			//time {simstring(ln)}
 			
@@ -49,7 +49,7 @@ object Runner {
 		
 
 	}
-	def AllScan(X: Ngram, r: Int, V:ReverseFeatureIndex, l: Int): List[String] = {
+	def AllScan(X: Ngram, r: Int, V:ReverseFeatureIndex, l: Int): List[CountMap] = {
 		val M = new ReverseKeyCountIndex();
 		val allStrings = X.ngrams().map(q => V.getStrings(q)).flatten.foreach(M ++ _);
 		/*
@@ -60,7 +60,7 @@ object Runner {
 			}
 		}
 		*/
-		List[String]("kissa");
+		M.ordered_keys()
 	}
 
 
