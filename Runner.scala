@@ -1,11 +1,11 @@
 import manipulators._;
-import scala.pickling.Defaults._, scala.pickling.binary._
 import java.io._
 import java.io.ByteArrayInputStream
+import dstructures._
 
 object Runner {
-	val words = collection.mutable.Map[String, String]();
-	var ngrams = collection.mutable.Map[String, List[String]]();
+	//val words = collection.mutable.Map[String, String]();
+	//var ngrams = collection.mutable.Map[String, List[String]]();
 
 	def time[R](block: => R): R = {
 		val t0 = System.nanoTime()
@@ -17,6 +17,7 @@ object Runner {
 
 
 	def main(args: Array[String]) {
+		/*
 		println("Loading database")
 		val source = io.Source.fromFile(args(0))
 		//val streamPickle = BinaryPickle(new FileInputStream(args(0)+".db"))
@@ -47,7 +48,14 @@ object Runner {
 			time {simstring(ln)}
 			
 		}
+		*/
+		println("Hell Wolr!");
+		val ri = new ReverseIndex(10)
+		ri.set(new FeatureMap("aab"))
+		ri.get("kissa");
 	}
+
+	/*
 
 	def fuzzysearch(querystr: String) {
 		println("Running fuzzysearch")
@@ -73,4 +81,5 @@ object Runner {
 		}
 		tlist.toList sortBy {-_._2} take(10) foreach {case (k, v) => println(k+": "+v)}
 	}
+	*/
 }

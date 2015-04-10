@@ -28,7 +28,7 @@ class NgramSplitter(plainstr: String)  {
 	def ngrams():List[String] = {
 		grams
 	}
-	// Return search range with treshold a
+	// Return search range with threshold a
 	// min: a^2 * |X|
 	// max: |X| / a^2
 	def search_range(a:Double):(Int, Int) = {
