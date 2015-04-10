@@ -1,5 +1,11 @@
 package manipulators
 
+
+/** NgramSplitter splits plain strings into ngrams and provides utilities for calculating min overlap and search range
+  *
+  * @constructor create list of ngrams
+  * @param plainstr Original string
+  */
 class NgramSplitter(plainstr: String)  {
 	val str = plainstr;
 	var grams = List[String]();

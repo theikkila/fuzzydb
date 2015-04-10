@@ -1,11 +1,16 @@
 package dstructures
-/*
-* Implementation of FeatureMap
-*/
+
+
+/** Maps features into original strings
+  *
+  * @constructor create a new FeatureMap with key
+  * @param k key/feature
+  */
 class FeatureMap(k:String) extends KeyStore {
 	val key = k;
 	var listlength = 0;
 	var strings = List[String]();
+
 
 	def addString(s: String) = {
 		strings = strings ::: List(s);
@@ -23,10 +28,16 @@ class FeatureMap(k:String) extends KeyStore {
 	
 }
 
-
+/** Maps keys and count of occurences
+  *
+  * @constructor create a key with count
+  * @param k Key
+  * @param c Count 
+  */
 class CountMap(k:String, c:Int = 0) extends KeyStore with MaxHeapable {
 	val key = k;
 	var count = c;
+	
 	override def value = count;
 	def ++() = {
 		count += 1;

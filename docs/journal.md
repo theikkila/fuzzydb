@@ -13,3 +13,15 @@ Vaikein asia oli syventyä erilaisiin _string approximate matching_ algoritmeihi
 
 Seuraavaksi aion toteuttaa koko artikkelissa kuvatun algoritmin käyttäen Scalan standardikirjastoa apuna.
 
+# Viikko 2
+
+Omien työkiireideni takia en juuri ehtinyt kehittää työtä eteenpäin.
+
+
+# Viikko 3
+
+Toteutin suurimman osan algoritmiin tarvittavista tietorakenteista (HashMapin ja Binäärikeon) sekä muutamia aputietorakenteita. Sain naiivin AllScan-ratkaisun toimimaan ja löytämään oikeita tuloksia.
+
+Kommentoin koodia paljon ja kirjoitin 53 testiä, jolloin testikattavuus on lähes 100%, huomioitavaa on kuitenkin etten ole vielä konfiguroinut testikattavuutta mittaavia kirjastoja ja tämä on puhdasta mututuntumaa.
+
+Ensi viikoksi tarkoituksena on implementoida __CPMerge__-algoritmi ja päästä vihdoin haluttuihin tuloksiin tehokkuudessa.

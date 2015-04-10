@@ -1,13 +1,15 @@
 package dstructures
-/*
-* Implementation of HashMap (ReverseIndex)
-*/
+
 
 trait KeyStore {
   def key: String
 }
 
-
+/** Implementation of HashMap (ReverseIndex)
+  *
+  * @constructor create ReverseIndex with initial size of 100 buckets
+  * @param buckets_count Count of buckets
+  */
 class ReverseIndex(buckets_count: Int = 100)  {
 	var buckets = new Array[List[KeyStore]](buckets_count);
 	buckets = buckets.map(idx => { List[KeyStore]()})
@@ -39,7 +41,9 @@ class ReverseIndex(buckets_count: Int = 100)  {
 }
 
 
-
+/** ReverseIndex which stores Features
+  *
+  */
 class ReverseFeatureIndex(buckets_count: Int = 100) extends ReverseIndex (buckets_count) {
 
 	def getLength(key: String): Int = {
@@ -79,10 +83,12 @@ class ReverseFeatureIndex(buckets_count: Int = 100) extends ReverseIndex (bucket
 
 }
 
-
+/** ReverseIndex for Key-Count pairs
+  *
+  */
 class ReverseKeyCountIndex(buckets_count: Int = 100) extends ReverseIndex (buckets_count) {
 
-	// Add count
+	// Add +1 count
 	def ++(key:String) = {
 		get(key) match {
 			case Some(cmap: CountMap) => cmap ++
@@ -101,6 +107,7 @@ class ReverseKeyCountIndex(buckets_count: Int = 100) extends ReverseIndex (bucke
 			case _ => 0
 		}
 	}
+	// Todo; Rewrite all heapsorts
 	def ordered_keys(): List[CountMap] = {
 		val h = new Heap()
 		var li = getBuckets().flatten match {

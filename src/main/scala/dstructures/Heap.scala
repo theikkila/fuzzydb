@@ -13,16 +13,23 @@ trait MaxHeapable extends Heapable{
 	override def diff(b: Heapable): Int = b.value - value
 }
 
-/*
-* Implements Binary Heap (Min or Max from traits)
-* http://en.wikipedia.org/wiki/Heap_(data_structure)
-*/
 
+/** Implements Binary Heap
+  * http://en.wikipedia.org/wiki/Heap_(data_structure)
+  *
+  * @constructor create a new heap with initial size of 100
+  * @param size Heap initial size
+  */
 class Heap(size: Int = 100) {
 	var heapsize = 0;
 	var len = size;
 	var A = new Array[Heapable](size);
 
+	/** Find min/max
+	  *
+	  * This method returns heap max/min in time O(1)
+	  * If there is no max/min then it returns None as Option
+	  */
 	def find():Option[Heapable] = {
 		if(heapsize <= 0) return None		
 		A(0) match {
@@ -30,6 +37,11 @@ class Heap(size: Int = 100) {
 			case _ => None
 		}
 	}
+	/** Delete min/max
+	  *
+	  * This method returns heap max/min and removes it in time O(log n)
+	  * If there is no max/min then it returns None as Option
+	  */
 	def del():Option[Heapable] = {
 		val m = find()
 		heapsize -= 1;
@@ -40,12 +52,21 @@ class Heap(size: Int = 100) {
 		}
 		m
 	}
+	/** Insert
+	  *
+	  * This method insert heap max/min and removes it in time O(log n)
+	  * If there is no max/min then it returns None as Option
+	  */
 	def insert(item: Heapable) = {
 		heapsize += 1;
 		if (heapsize >= len) resize()
 		A(heapsize-1) = item
 		decreaseKey(heapsize-1)
 	}
+	/** Decrease-key
+	  *
+	  * This method decreases key in time O(log n)
+	  */
 	def decreaseKey(i: Int) = {
 		var index = i;
 		while (index > 0 && A(parent(index)).diff(A(index)) >= 0) {
@@ -54,26 +75,34 @@ class Heap(size: Int = 100) {
 		}
 	}
 	def merge() = None
+	
+	/** Length
+	  *
+	  * Returns heap size in time O(1)
+	  */
 	def length():Int = heapsize
 
-	// Return left child
+	/** Return left child index */
 	def left(i: Int): Int = (2 * i)
 
-	// Return right child
+	/** Return right child index */
 	def right(i: Int): Int = (2 * i + 1)
 
-	// Return parents index
+	/** Return parent index */
 	def parent(i: Int): Int = {
 		(i / 2)
 	}
-	// swap
+	/** Swap two keys */
 	def swap(i: Int, j: Int) = {
 		val iv = A(i)
 		A(i) = A(j)
 		A(j) = iv
 	}
 
-	// heapify
+	/** Heapify
+	  *
+	  * This method heapifys array
+	  */
 	def heapify(i: Int): Unit = {
 		val l = left(i)
 		val r = right(i)
@@ -87,7 +116,10 @@ class Heap(size: Int = 100) {
 			heapify(smallest)
 		}
 	}
-
+	/** Resize
+	  *
+	  * This method resizes heap space
+	  */
 	def resize(): Unit = {
 		A = A ++ new Array[Heapable](len);
 		len = len*2

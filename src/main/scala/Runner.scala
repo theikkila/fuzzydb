@@ -3,7 +3,7 @@ import java.io._
 import java.io.ByteArrayInputStream
 import dstructures._
 
-object Runner {
+object Runner extends App {
 	//val words = collection.mutable.Map[String, String]();
 	//var ngrams = collection.mutable.Map[String, List[String]]();
 
@@ -16,10 +16,15 @@ object Runner {
 	}
 
 
-	def main(args: Array[String]) {
+	override def main(args: Array[String]) {
 		val V = new ReverseFeatureIndex();
-		println("Loading database")
+		if(args.length <= 0){
+			println("ERROR: give database file: run <database.txt>")
+			return System.exit(1);
+		}
+		
 		val source = io.Source.fromFile(args(0))
+		println("Loading database")
 		val lines =  source.getLines
 		var counter = 0;
 		for( line <- lines) {

@@ -11,3 +11,4 @@ libraryDependencies += "org.scala-lang.modules" %% "scala-pickling" % "0.10.0"
 // Uncomment to use Akka
 //libraryDependencies += "com.typesafe.akka" % "akka-actor_2.11" % "2.3.9"
 
+mainClass in (Compile, run) := Some("Runner")
