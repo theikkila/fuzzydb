@@ -41,6 +41,7 @@ object Runner {
 		
 		for (ln <- io.Source.stdin.getLines) {
 			print("?: ");
+			//Search(ln, 0.7, V, AllScan).foreach(println(_))
 			Search(ln, 0.7, V, AllScan).foreach(println(_))
 			//time {fuzzysearch(ln)}
 			//time {simstring(ln)}
@@ -79,16 +80,23 @@ object Runner {
 	}
 
 
-	def CPMerge(X: Ngram, r: Int, V:ReverseFeatureIndex, l: Int): List[String] = {
-		val weights : Array[Int] = X.ngrams().map(x => {
+	def CPMerge(X: List[String], r: Int, V:ReverseFeatureIndex, l: Int): List[CountMap] = {
+		val weights : Array[Int] = X.map(x => {
 			V.getLength(x)
 			}).toArray
+		val ng = new Ngram(X, "");
+		ng.setWeights(weights);
+		val query = ng.ngrams_ordered();
+		//query.foreach(println)
+		val M = new ReverseKeyCountIndex();
+		for( k <- 0 to (X.length - r)) {
+			V.getStringsOfLength(X(k), l).foreach(M ++ _)
+		}
+		for( k <- (X.length - r + 1) to (X.length - 1)) {
+			
+		}
 
-		X.setWeights(weights);
-		val query = X.ngrams_ordered();
-		query.foreach(println)
-
-		List[String]("kissa");
+		List[CountMap](new CountMap("kissa"));
 	}
 
 	/*
