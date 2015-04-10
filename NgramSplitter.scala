@@ -34,4 +34,7 @@ class NgramSplitter(plainstr: String)  {
 	def search_range(a:Double):(Int, Int) = {
 		((a*a*grams.length).toInt, (grams.length/(a*a)).toInt) 
 	}
+	def min_overlap(a:Double, l:Int):Int = {
+		(a * Math.sqrt(grams.length * l)).toInt
+	}
 }

@@ -41,7 +41,7 @@ object Runner {
 		
 		for (ln <- io.Source.stdin.getLines) {
 			print("?: ");
-			AllScan(new Ngram(ln), 3, V, 10).foreach(println(_))
+			Search(ln, 0.7, V, AllScan).foreach(println(_))
 			//time {fuzzysearch(ln)}
 			//time {simstring(ln)}
 			
@@ -49,9 +49,24 @@ object Runner {
 		
 
 	}
-	def AllScan(X: Ngram, r: Int, V:ReverseFeatureIndex, l: Int): List[CountMap] = {
+	def Search(query: String, a: Double, V:ReverseFeatureIndex, overlapjoin: (List[String], Int, ReverseFeatureIndex, Int) => List[CountMap]): List[CountMap] = {
+		// Generating features and search range(min->max)
+		val xq = new NgramSplitter(query);
+		val X = xq.generate_ngrams();
+		var Y = List[CountMap]();
+		val (search_min, search_max) = xq.search_range(a);
+		for( l <- search_min to search_max) {
+			val r = xq.min_overlap(a, l);
+			val R = overlapjoin(X, r, V, l);
+			R.foreach(st => { Y = Y ::: List[CountMap](st); })
+		}
+		Y
+	}
+	//AllScan(new Ngram(ln), 3, V, 10).foreach(println(_))
+
+	def AllScan(X: List[String], r: Int, V:ReverseFeatureIndex, l: Int): List[CountMap] = {
 		val M = new ReverseKeyCountIndex();
-		val allStrings = X.ngrams().map(q => V.getStrings(q)).flatten.foreach(M ++ _);
+		val allStrings = X.map(q => V.getStringsOfLength(q, l)).flatten.foreach(M ++ _);
 		/*
 		for(gram <- X.ngrams()) {
 			println(gram)
@@ -60,7 +75,7 @@ object Runner {
 			}
 		}
 		*/
-		M.ordered_keys()
+		M.ordered_keys().filter(cm => { cm.value >= r });
 	}
 
 

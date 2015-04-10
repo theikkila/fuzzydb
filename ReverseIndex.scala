@@ -111,8 +111,8 @@ class ReverseKeyCountIndex(buckets_count: Int = 100) extends ReverseIndex (bucke
 		var ld = List[CountMap]();
 		for (l <- 0 to h.length()) {
 			h.del() match {
-				case Some(cm: CountMap) => { println("d", cm); ld = ld ::: List(cm)};
-				case _ => { println("Nooni tuli!"); }
+				case Some(cm: CountMap) => ld = ld ::: List(cm)
+				case _ => None
 			}
 		}
 		ld
